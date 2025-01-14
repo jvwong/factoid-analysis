@@ -1,2 +1,2 @@
 # factoid-analysis
-For the analysis of the factoid database
+A CLI for the analysis of the factoid database

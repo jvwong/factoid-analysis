@@ -1,0 +1,39 @@
+{
+  "name": "factoid-analysis",
+  "version": "1.0.0",
+  "description": "A CLI for the analysis of the factoid database",
+  "keywords": [
+    "factoid",
+    "statistics"
+  ],
+  "homepage": "https://github.com/jvwong/factoid-analysis#readme",
+  "bugs": {
+    "url": "https://github.com/jvwong/factoid-analysis/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jvwong/factoid-analysis.git"
+  },
+  "license": "CC0-1.0",
+  "author": "jvwong",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.18.0",
+    "chai": "^5.1.2",
+    "eslint": "^8.57.1",
+    "globals": "^15.14.0",
+    "mocha": "^11.0.1",
+    "rimraf": "^6.0.1"
+  },
+  "dependencies": {
+    "commander": "^13.0.0",
+    "json2csv": "^6.0.0-alpha.2",
+    "lodash": "^4.17.21",
+    "node-fetch": "^3.3.2",
+    "rethinkdb": "^2.4.2"
+  }
+}
