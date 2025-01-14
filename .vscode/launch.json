@@ -17,7 +17,9 @@
       "args": [
         "deltaSub",
         "--input",
-        "elife_public_2024.txt"
+        "elife_public_2024.txt",
+        "--output",
+        "elife_public_2024_deltaSub.csv"
       ],
       "env": {}
     },

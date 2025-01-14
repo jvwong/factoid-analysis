@@ -13,7 +13,6 @@ const loadTable = name => dbdriver.accessTable(name);
  */
 export async function deltaSub ({ input }) {
 
-
   const created = document => {
     return {
       created: r.branch(

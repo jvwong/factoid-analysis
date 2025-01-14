@@ -1,11 +1,12 @@
 import { program } from 'commander';
 
 import { deltaSub as deltaSubImpl } from './deltaSub.js';
-import { sendOutput } from './util/format.js';
+import { sendOutput, json2csv } from './util/format.js';
 
 async function deltaSub ( options ) {
   const data = await deltaSubImpl( options );
-  await sendOutput( data, options );
+  const csv = json2csv( data );
+  await sendOutput( csv, options );
 }
 
 async function main () {
@@ -17,6 +18,7 @@ async function main () {
   (program.command( 'deltaSub' )
     .description( 'Elapsed time between status initiated and submitted' )
     .option('-i, --input <str>', 'Input txt file: Newline separated list of Document UUIDs')
+    .option('-o, --output <str>', 'Output file: CSV results')
     .action( deltaSub )
   );
 
