@@ -19,8 +19,11 @@ const env = (key, defaultVal) => {
 // General
 export const NODE_ENV = env('NODE_ENV', undefined);
 
+// Filesystem
+export const DATA_FOLDER_ROOT = env('DATA_FOLDER_ROOT', './data');
+
 // Database
-export const DB_NAME = env('DB_NAME', undefined);
+export const DB_NAME = env('DB_NAME', 'factoid');
 export const DB_HOST = env('DB_HOST', 'localhost');
 export const DB_PORT = env('DB_PORT', 28015);
 export const DB_USER = env('DB_USER', undefined); // username if db uses auth
