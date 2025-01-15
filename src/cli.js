@@ -4,8 +4,8 @@ import { deltaSub as deltaSubImpl } from './deltaSub.js';
 import { sendOutput, json2csv } from './util/format.js';
 
 async function deltaSub ( options ) {
-  const data = await deltaSubImpl( options );
-  const csv = json2csv( data );
+  const { data, fields } = await deltaSubImpl( options );
+  const csv = json2csv( data, { fields } );
   await sendOutput( csv, options );
 }
 
