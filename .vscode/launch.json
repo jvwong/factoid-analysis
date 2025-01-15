@@ -25,19 +25,23 @@
     },
 
     {
-      "name": "Test",
+      "name": "entities",
       "request": "launch",
-      "runtimeArgs": [
-        "run-script",
-        "test"
-      ],
-      "runtimeExecutable": "npm",
       "skipFiles": [
         "<node_internals>/**"
       ],
       "type": "node",
       "console": "integratedTerminal",
-      "runtimeVersion": "22.11.0"
-    }
+      "program": "${workspaceFolder}/factoid-analysis.js",
+      "runtimeVersion": "22.11.0",
+      "args": [
+        "entities",
+        "--input",
+        "elife_public_2024.txt",
+        "--output",
+        "elife_public_2024_entities.csv"
+      ],
+      "env": {}
+    },
   ]
 }
