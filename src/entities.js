@@ -23,12 +23,16 @@ export default async function entities ({ input }) {
   q = q.merge( field.doi );
   q = q.merge( field.title );
 
+  // Calculate number of interactions
+  q = q.map( field.mergeEntries );
+  q = q.merge( field.numInteractions );
+
   // Retrieve fields
   const fields = [
     'id',
     'doi',
     'title',
-    'interactions',
+    'numInteractions',
     'participants',
     'organisms'
   ];
