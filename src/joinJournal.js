@@ -26,12 +26,18 @@ const augmentData = ( data, pmArticleSet ) => {
     const { pmid } = datum;
     const pmArticle = _.find( pmArticleSet, function(o) { return o.MedlineCitation.PMID === pmid; } );
     const ISSN = getISSN( pmArticle );
-    const jrnlMeta = journalMap.get( ISSN.value );
 
-    // if( journal ) {
-    const { title: journal, h_index, publisher } = jrnlMeta;
+    let journal = null;
+    let h_index = null;
+    let publisher = null;
+
+    if( journalMap.has( ISSN.value ) ) { //
+      const jrnlMeta = journalMap.has( ISSN.value );
+      journal = jrnlMeta.title;
+      h_index = jrnlMeta.h_index;
+      publisher = jrnlMeta.publisher;
+    }
     _.assign( augmented, { journal, h_index, publisher });
-    // }
     output.push( augmented );
   }
   return output;
