@@ -5,6 +5,26 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "joinJournal",
+      "request": "launch",
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "type": "node",
+      "console": "integratedTerminal",
+      "program": "${workspaceFolder}/factoid-analysis.js",
+      "runtimeVersion": "22.11.0",
+      "args": [
+        "joinJournal",
+        "--input",
+        "Biofactoid-Email-Campaigns_previous-invites.csv",
+        "--output",
+        "biofactoid-email-campaign_previous-invites_joined.csv"
+      ],
+      "env": {}
+    },
+
+    {
       "name": "deltaSub",
       "request": "launch",
       "skipFiles": [

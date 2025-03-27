@@ -2,7 +2,11 @@ import {
   readFile,
   writeFile
 } from 'node:fs/promises';
+import fs from 'node:fs';
 import path from 'path';
+import { parse } from 'csv-parse';
+import _ from 'lodash';
+
 import { DATA_FOLDER_ROOT } from '../config.js';
 
 /**
@@ -17,6 +21,24 @@ export async function newlineEntries( filename ) {
   const text = await readFile( pathname, { encoding: 'utf8' } );
   data = text.split('\n').filter( x => x.length > 0 );
   return data;
+}
+
+/**
+ * Retrieve a JSON iterator from a csv file
+ *
+ * @param {string} filename Name of the file
+ * @param {object} options CSV parser options
+ * @returns {object} Array of JSON entries
+ */
+export async function getJsonIterator( filename, options = {} ) {
+  const pathname = path.resolve ( path.join( DATA_FOLDER_ROOT, filename ) );
+  const DEFAULT_OPTS = { columns: true };
+  const opts = _.defaults( options, DEFAULT_OPTS );
+  const parser = fs
+    .createReadStream( pathname )
+    .pipe(parse( opts ));
+
+  return parser;
 }
 
 /**
