@@ -14,22 +14,43 @@ const loadTable = name => dbdriver.accessTable(name);
  */
 export default async function deltaSub ({ input }) {
 
-  const created = document => {
+  // const created = document => {
+  //   return {
+  //     created: r.branch(
+  //       document('createdDate').typeOf().eq('PTYPE<TIME>'),
+  //         r.round(document('createdDate').toEpochTime()),
+  //       document('createdDate').typeOf().eq('NUMBER'),
+  //         r.round(document('createdDate')),
+  //       null
+  //     ),
+  //     dateCreated: r.branch(
+  //       document('createdDate').typeOf().eq('PTYPE<TIME>'),
+  //         document('createdDate').toISO8601().split('T')(0),
+  //       document('createdDate').typeOf().eq('NUMBER'),
+  //         r.epochTime(document('createdDate')).toISO8601().split('T')(0),
+  //       null
+  //     )
+  //   }
+  // };
+
+  const initiated =  document => {
     return {
-      created: r.branch(
-        document('createdDate').typeOf().eq('PTYPE<TIME>'),
-          r.round(document('createdDate').toEpochTime()),
-        document('createdDate').typeOf().eq('NUMBER'),
-          r.round(document('createdDate')),
-        null
-      ),
-      dateCreated: r.branch(
-        document('createdDate').typeOf().eq('PTYPE<TIME>'),
-          document('createdDate').toISO8601().split('T')(0),
-        document('createdDate').typeOf().eq('NUMBER'),
-          r.epochTime(document('createdDate')).toISO8601().split('T')(0),
-        null
-      )
+      initiated:
+        r.branch(
+          document('_ops')
+            .filter( function(op){
+              return op('data')('status').eq('initiated');
+            })
+            .count().gt(0),
+          document('_ops')
+            .filter( function(op){
+              return op('data')('status').eq('initiated');
+            })
+            .nth(0).default(0)('timestamp')
+            .toEpochTime()
+            .round(),
+          null
+        )
     }
   };
 
@@ -54,14 +75,14 @@ export default async function deltaSub ({ input }) {
     }
   };
 
-  const hasSubmitted = document => {
-    return document('submitted').ne(null);
+  const hasStamps = document => {
+    return document('submitted').ne(null).and( document('initiated').ne(null) );
   }
 
   const elapsed = document => {
     return {
       elapsed:
-        document('submitted').sub( document('created') ).div(60)
+        document('submitted').sub( document('initiated') ).div(60)
     }
   }
 
@@ -74,13 +95,13 @@ export default async function deltaSub ({ input }) {
   // Merge in useful fields
   q = q.merge( field.doi );
   q = q.merge( field.title );
-  q = q.merge( created );
+  q = q.merge( initiated );
   q = q.merge( submitted );
-  q = q.filter( hasSubmitted );
+  q = q.filter( hasStamps );
   q = q.merge( elapsed );
 
   // Retrieve fields
-  const fields = [ 'id', 'doi', 'title', 'dateCreated', 'elapsed' ];
+  const fields = [ 'id', 'doi', 'title', 'elapsed' ];
   q = q.pluck( fields );
 
   // Execute query
