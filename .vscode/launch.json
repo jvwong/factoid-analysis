@@ -37,9 +37,9 @@
       "args": [
         "deltaSub",
         "--input",
-        "elife_public_2024.txt",
+        "public_JUL-14-2025.txt",
         "--output",
-        "elife_public_2024_deltaSub.csv"
+        "public_JUL-14-2025_deltaSub.csv"
       ],
       "env": {}
     },
@@ -57,9 +57,9 @@
       "args": [
         "entities",
         "--input",
-        "elife_public_2024.txt",
+        "public_JUN-19-2025.txt",
         "--output",
-        "elife_public_2024_entities.csv"
+        "public_JUN-19-2025_entities.csv"
       ],
       "env": {}
     },

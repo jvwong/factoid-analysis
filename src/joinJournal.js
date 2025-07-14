@@ -15,29 +15,47 @@ for ( const journal of journals ) {
 
 // Walk through PubMed data
 const augmentData = ( data, pmArticleSet ) => {
-  const getISSN = PubmedArticle => {
-    const { MedlineCitation: { Article } } = PubmedArticle;
-    const { Journal: { ISSN } } = Article;
-    return ISSN;
+
+  const extractPmFields = PubmedArticle => {
+    const getPubmedDate =  History => {
+      const formatDate = ({ Year, Month, Day }) => `${Year}-${Month}-${Day}`;
+      const pmDate = _.find( History, { PubStatus: 'pubmed' } );
+      if( !pmDate ) throw new Error( `No PubMed date found for article` );
+      const { PubMedPubDate } = pmDate;
+      return formatDate( PubMedPubDate );
+    };
+    const { MedlineCitation: { Article }, PubmedData } = PubmedArticle;
+    const { AuthorList, Journal: { ISSN, Title: JournalTitle } } = Article;
+
+    const { History } =  PubmedData;
+    const PubMedPubDate = getPubmedDate( History );
+    return ({ ISSN, PubMedPubDate, AuthorList, JournalTitle });
   };
+
   const output = [];
   for ( const datum of data ) {
     let augmented = _.assign( {}, datum );
     const { pmid } = datum;
     const pmArticle = _.find( pmArticleSet, function(o) { return o.MedlineCitation.PMID === pmid; } );
-    const ISSN = getISSN( pmArticle );
-
-    let journal = null;
-    let h_index = null;
-    let publisher = null;
-
-    if( journalMap.has( ISSN.value ) ) { //
-      const jrnlMeta = journalMap.has( ISSN.value );
-      journal = jrnlMeta.title;
-      h_index = jrnlMeta.h_index;
-      publisher = jrnlMeta.publisher;
+    if( !pmArticle ) {
+      console.error( `No PubMed article found for PMID ${pmid}` );
+      throw new Error();
     }
-    _.assign( augmented, { journal, h_index, publisher });
+
+    const { ISSN, PubMedPubDate, AuthorList, JournalTitle } = extractPmFields( pmArticle );
+
+    let h_index = null;
+    let sjr = null;
+    let journal = JournalTitle;
+    let date = PubMedPubDate;
+    let numAuthors = AuthorList ? AuthorList.length : null;
+
+    if( journalMap.has( ISSN.value ) ) {
+      const jrnlMeta = journalMap.get( ISSN.value );
+      h_index = jrnlMeta.h_index;
+      sjr = jrnlMeta.sjr;
+    }
+    _.assign( augmented, { journal, h_index, sjr, date, numAuthors });
     output.push( augmented );
   }
   return output;
@@ -52,14 +70,12 @@ const augmentData = ( data, pmArticleSet ) => {
  */
 export default async function joinJournal ({ input }) {
   const getPmid = x => x.pmid;
-
-
   const data = [];
-  const chunkSize = 1000;
 
   // Load biofactoid email campaign data
   const emailData = await getCsv2json( input );
-  const emailDataChunks = chunkify( emailData, chunkSize );
+  const CHUNK_SIZE = 1000;
+  const emailDataChunks = chunkify( emailData, CHUNK_SIZE );
 
   let i = 0;
   for await ( const chunk of emailDataChunks ) {
@@ -73,17 +89,7 @@ export default async function joinJournal ({ input }) {
 
   return ({
     data,
-    fields: [
-      'pmid',
-      'emailRecipientAddress',
-      'inviteSent',
-      'campaign',
-      'type',
-      'isDocument',
-      'h_index',
-      'journal',
-      'publisher'
-    ]
+    fields: Object.keys( data[0] )
   });
 }
 
