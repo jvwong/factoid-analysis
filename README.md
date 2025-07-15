@@ -14,7 +14,7 @@ There are commands available to (1) Calculate elapsed time between the initiatio
 
 1. Get the RethinkDB database file
 
-Download the Biofactoid database dump which was exported on July 12, 2025. This file is named [factoid_dump_2025-07-12_01-12-31-179_analysis.tar.gz](). //TODO
+Download the Biofactoid database dump which was exported on July 12, 2025. This file is not being made publically available as it contains email addreses of authors who were invited to use Biofactoid.
 
 2. Restore RethinkDB database from file
 
