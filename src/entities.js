@@ -32,8 +32,7 @@ export default async function entities ({ input }) {
     'id',
     'doi',
     'title',
-    'numInteractions',
-    'participants'
+    'numInteractions'
   ];
   q = q.pluck( fields );
 
